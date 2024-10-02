@@ -1,0 +1,49 @@
+﻿
+@using ReservasRestaurante.DTO
+@using ReservasRestaurante.Services
+@page "/reservas"
+<h3> Lista de Reservas</h3>
+@if (reservas == null)
+{
+    <p><em>Cargando...</em></p>
+}else{
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Fecha Reserva</th>
+            <th>Hora</th>
+            <th>NumPersonas</th>
+            <th>Estado</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var reservas in reservas)
+        {
+            <tr>
+                <td>@reservas.FechaReserva.ToShortDateString()</td>
+                <td>@reservas.HoraReserva</td>
+                <td>@reservas.NumPersonas</td>
+                <td>@reservas.Estado</td>
+            </tr>
+        }
+    </tbody>
+  </table>
+}
+@inject ReservaService reservaService
+@code {
+    private List<ReservaResponse>? reservas;
+    private string errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            reservas = await reservaService.GetReservas();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+    }
+}
